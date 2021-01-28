@@ -1,10 +1,10 @@
 package spell;
 
 public class Node implements INode {
-    public char c;
-    public Node[] children;
-    public int value = 0;
-    int i = 0;
+    protected char c;
+    protected Node[] children;
+    protected int value = 0;
+    protected int ind = 0;
 
     public Node(char c) {
         this.c = c;
@@ -23,7 +23,6 @@ public class Node implements INode {
 
     @Override
     public INode[] getChildren() {
-//        return new INode[0];
         return children;
     }
 }
