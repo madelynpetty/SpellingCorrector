@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static java.lang.Character.valueOf;
+
 public class SpellCorrector implements ISpellCorrector {
     private final Trie trie;
     private final TreeSet <String> words;
@@ -33,7 +35,7 @@ public class SpellCorrector implements ISpellCorrector {
 
     @Override
     public String suggestSimilarWord(String inputWord) {
-        String word;
+        String word = null;
         if (trie.find(inputWord) != null) { //if the input string is found in the Trie (meaning it is spelled correctly)
             return inputWord;
         }
@@ -45,7 +47,6 @@ public class SpellCorrector implements ISpellCorrector {
 
             word = suggestSimilarWordHelper(words);
             if (word == null) {
-//                for (int i = 0; i < words.size(); i++) {
                 for (String s : words) {
                     deletion(s, words2);
                     transposition(s, words2);
@@ -72,22 +73,8 @@ public class SpellCorrector implements ISpellCorrector {
                 }
             }
         }
-
         return word;
     }
-
-//    private Set<String> createNewSet(Set<String> wordSet) {
-//        words2 = words;
-//
-//        for (String s : words) {
-//            insertion(s, words2);
-//            deletion(s, words2);
-//            transposition(s, words2);
-//            alteration(s, words2);
-//        }
-//
-//        return words2;
-//    }
 
     private void deletion(String inputWord, Set<String> words) {
         for (int i = 0; i < inputWord.length(); i++) {
@@ -104,37 +91,61 @@ public class SpellCorrector implements ISpellCorrector {
     }
 
     private void transposition(String inputWord, Set<String> words) {
-        char[] chars = new char[inputWord.length()];
         for (int i = 0; i < inputWord.length(); i++) {
-            inputWord.getChars(0, i, chars,0);
             for (int j = 0; j < inputWord.length(); j++) {
-                if (j != i) {
-//                    int alpha = j + 97;
-                    char temp = chars[i];
-                    chars[i] = chars[j];
-                    chars[j] = temp;
-
-                    inputWord.getChars(i, inputWord.length(), chars, i);
-                    words.add(new String(chars));
+                if (i - j == -1) {
+                    StringBuilder stringbuilder = new StringBuilder(inputWord);
+                    char iChar = stringbuilder.charAt(i);
+                    char jChar = stringbuilder.charAt(j);
+                    stringbuilder.setCharAt(i, jChar);
+                    stringbuilder.setCharAt(j, iChar);
+                    String word = stringbuilder.toString();
+                    words.add(word);
                 }
             }
+            StringBuilder stringbuilder = new StringBuilder(inputWord);
         }
+
+//        char[] chars = new char[inputWord.length()];
+//        for (int i = 0; i < inputWord.length(); i++) {
+//            inputWord.getChars(0, i, chars,0);
+//            for (int j = 0; j < inputWord.length(); j++) {
+//                if (i - j == -1) {
+////                    int alpha = j + 97;
+//                    char temp = chars[i];
+//                    chars[i] = chars[j];
+//                    chars[j] = temp;
+//
+//                    inputWord.getChars(i, inputWord.length(), chars, i);
+//                    words.add(new String(chars));
+//                }
+//            }
+//        }
     }
 
     private void alteration(String inputWord, Set<String> words) {
-        char[] chars = new char[inputWord.length()];
         for (int i = 0; i < inputWord.length(); i++) {
-            inputWord.getChars(0, i, chars,0);
             for (int j = 0; j < 26; j++) {
-                if (j != i) {
-                    int alpha = j + 97;
-                    chars[i] = (char) j;
-
-                    inputWord.getChars(i, inputWord.length(), chars, i);
-                    words.add(new String(chars));
-                }
+                int alpha = (char) j + 97;
+                StringBuilder stringbuilder = new StringBuilder(inputWord);
+                stringbuilder.setCharAt(i, (char) alpha);
+                String word = stringbuilder.toString();
+                words.add(word);
             }
+            StringBuilder stringbuilder = new StringBuilder(inputWord);
         }
+
+//        char[] chars = new char[inputWord.length()];
+//        for (int i = 0; i < inputWord.length(); i++) {
+//            inputWord.getChars(0, i, chars,0);
+//            for (int j = 0; j < 26; j++) {
+//                int alpha = j + 97;
+//                chars[i] = (char) alpha;
+//
+//                inputWord.getChars(i, inputWord.length(), chars, 0);
+//                words.add(String.valueOf(chars));
+//            }
+//        }
     }
 
     private void insertion(String inputWord, Set<String> words) {
