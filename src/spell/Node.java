@@ -1,13 +1,11 @@
 package spell;
 
 public class Node implements INode {
-    protected char c;
     protected Node[] children;
     protected int value = 0;
     protected int ind = 0;
 
-    public Node(char c) {
-        this.c = c;
+    public Node() {
         children = new Node[26];
     }
 

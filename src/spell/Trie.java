@@ -9,17 +9,20 @@ public class Trie implements ITrie {
     private int numNodes = 0;
 
     public Trie() {
-        root = new Node('\0');
+        root = new Node(); //'\0'
         numNodes++;
     }
 
     @Override
     public void add(String word) {
+        if (root == null || word == null) {
+            return;
+        }
         Node curr = root;
         for (int i = 0; i < word.length(); i++) {
             char c = word.charAt(i);
             if (curr.children[c - 'a'] == null) {
-                curr.children[c - 'a'] = new Node(c);
+                curr.children[c - 'a'] = new Node(); //c
                 numNodes++;
             } //now we know the node has been created
             curr = curr.children[c - 'a'];
@@ -63,8 +66,12 @@ public class Trie implements ITrie {
                 curr = curr.children[c - 'a'];
             }
         }
-
-        return curr;
+        if (curr.getValue() != 0) {
+            return curr;
+        }
+        else {
+            return null;
+        }
     }
 
     @Override

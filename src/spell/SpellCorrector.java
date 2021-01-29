@@ -24,7 +24,7 @@ public class SpellCorrector implements ISpellCorrector {
         scanner.useDelimiter("((#[^\\n]*\\n)|(\\s+))+"); //technically could do everything after the | since we don't have comments in the file
 
         while (scanner.hasNext()) {
-            trie.add(scanner.next());
+            trie.add(scanner.next().toLowerCase());
         }
 
 //        Iterator<String> iterator = words.iterator();
@@ -35,7 +35,10 @@ public class SpellCorrector implements ISpellCorrector {
 
     @Override
     public String suggestSimilarWord(String inputWord) {
+        words.clear();
+        inputWord = inputWord.toLowerCase();
         String word = null;
+
         if (trie.find(inputWord) != null) { //if the input string is found in the Trie (meaning it is spelled correctly)
             return inputWord;
         }
